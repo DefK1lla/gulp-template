@@ -37,23 +37,27 @@ function scriptsBuilder() {
     return src([
         'app/js/main.js',
     ])
+        .pipe(sourcemaps.init())
         .pipe(concat('main.min.js'))
         .pipe(babel({
             presets: ['@babel/env']
         }))
         .pipe(uglify())
+        .pipe(sourcemaps.write('./maps'))
         .pipe(dest('app/js'))
         .pipe(browserSync.stream())
 }
 
 function stylesBuilder() {
     return src('app/scss/style.scss')
+        .pipe(sourcemaps.init())
         .pipe(scss({ outputStyle: 'compressed' }))
         .pipe(concat('style.min.css'))
         .pipe(autoprefixer({
             overrideBrowserslist: ['last 10 version'],
             grid: true
         }))
+        .pipe(sourcemaps.write('./maps'))
         .pipe(dest('app/css'))
         .pipe(browserSync.stream())
 }
