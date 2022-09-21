@@ -3,12 +3,11 @@ const { src, dest, watch, parallel, series } = require('gulp');
 const scss = require('gulp-sass')(require('sass'));
 const concat = require('gulp-concat');
 const browserSync = require('browser-sync').create();
+const babel = require('gulp-babel');
 const uglify = require('gulp-uglify-es').default;
 const autoprefixer = require('gulp-autoprefixer');
 const imageMin = require('gulp-imagemin');
 const del = require('del');
-
-
 
 function browser() {
     browserSync.init({
@@ -39,6 +38,9 @@ function scriptsBuilder() {
         'app/js/main.js',
     ])
         .pipe(concat('main.min.js'))
+        .pipe(babel({
+            presets: ['@babel/env']
+        }))
         .pipe(uglify())
         .pipe(dest('app/js'))
         .pipe(browserSync.stream())
@@ -72,8 +74,6 @@ function watcher() {
 
 function builder() {
     return src([
-        'app/phpmailer/**/*',
-        'app/mail.php',
         'app/css/style.min.css',
         'app/fonts/**/*',
         'app/js/main.min.js',
